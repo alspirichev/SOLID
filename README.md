@@ -3,12 +3,8 @@
 **SOLID** is an acronym for the first five object-oriented design principles
 
 - [The Single Responsibility Principle (SRP)](#the-single-responsibility-principle-srp)
-  - [Description](#description)
-  - [Responsibility](#responsibility)
-  - [Examples](#examples)
-  - [Cohesion (conceptual view)](#cohesion-conceptual-view)
-  - [When to apply the SRP?](#when-to-apply-the-srp)
- - [Source](#source)
+- [The Open/Closed Principle (OCP)](#the-open-closed-principle-ocp)
+- [Source](#source)
 
 
 # The Single Responsibility Principle (SRP)
@@ -83,6 +79,51 @@ In general, a class **is assigned the responsibility to know or do something (on
 	* Both responsibilities are only used together by other classes.
 
 	* Responsibilities pertain to mandatory features.
+	
+# The Open Closed Principle (OCP)
+
+> <h3> Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.
+
+### Description of OCP
+
+Modules that conform to OCP have two primary attributes:
+
+1. They are **open** for extension.
+
+This means that the behavior of the module can be **extended**. As the requirements of the application change, we can extend the module with new behaviors that satisfy those changes. In other words, we are able to change what the module does.
+
+2. They are **closed** for modification.
+
+Extending the behavior of a module **does not result** in changes to the source, or binary, code of the module. The binary executable version of the modulewhether in a linkable library, a DLL, or a .EXE fileremains untouched.
+
+- How is it possible that the behaviors of a module can be modified without **changing** its source code?
+- Without changing the module, how can we change what a module does?
+
+:tada: The answer is **abstraction**. :tada:
+
+In C# or any other object-oriented programming language, it is possible to create **abstractions** that are fixed and yet represent an unbounded group of possible behaviors. The abstractions are abstract base classes, and the unbounded group of possible behaviors are represented by all the possible derivative classes.
+
+### Example:
+
+Figure 1 shows a simple design that does **not conform** to OCP. Both the **Client** and **Server** classes are **concrete**. The **Client** class uses the **Server** class. If we want for a **Client** object to use a **different** server object, the **Client** class must be changed to name the new server class.
+
+Figure 1:
+
+![OCP](https://github.com/alspirichev/SOLID/blob/master/OCP/1.png)
+
+Figure 2:
+
+![OCP](https://github.com/alspirichev/SOLID/blob/master/OCP/2.png)
+
+Figure 2 shows the corresponding design that **conforms** to the OCP by using the *STRATEGY* pattern. In this case, the **ClientInterface** class is abstract with abstract member functions.
+
+The **Client** class uses this abstraction. However, objects of the **Client** class will be using objects of the derivative **Server** class. If we want **Client** objects to use a **different** server class, a new derivative of the **ClientInterface** class can be created. The **Client** class can remain unchanged.
+
+:interrobang: Why didn't I call it **AbstractServer**? 
+
+The reason, as we will see later, is that *abstract classes are more closely associated to their clients than to the classes that implement them*.
+
+> <h3> No matter how closed a module is, there will always be some kind of change against which it is not closed.
   
   # :books: Source
 
