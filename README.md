@@ -4,6 +4,7 @@
 
 - [The Single Responsibility Principle (SRP)](#the-single-responsibility-principle-srp)
 - [The Open/Closed Principle (OCP)](#the-open-closed-principle-ocp)
+- [The Liskov Substitution Principle (LSP)](#the-liskov-substitution-principle-lsp)
 - [Source](#source)
 
 
@@ -124,8 +125,96 @@ The **Client** class uses this abstraction. However, objects of the **Client** c
 The reason, as we will see later, is that *abstract classes are more closely associated to their clients than to the classes that implement them*.
 
 > <h3> No matter how closed a module is, there will always be some kind of change against which it is not closed.
-  
-  # :books: Source
+
+# The Liskov Substitution Principle (LSP)
+
+> <h3> Subtypes must be substitutable for their base types.
+
+This principle:
+
+* gives us a way to characterize **good inheritance hierarchies**
+
+* increases our awareness about traps that will cause us to create hierarchies that do not conform to the open-closed principle.
+
+### Example:
+
+* Assume, we have implemented a class **Rectangle** in our system.
+
+```objective-c
+class Rectangle {
+	public void setWidth(int width) { this.width = width; }
+
+	public void setHeight(int height) { this.height = height;}
+
+	public void area() { return height * width;}
+}
+```
+
+* Let's now assume that we want to implement a class **Square** and want to maximize **reuse**.
+
+![Class hierarchy](https://github.com/alspirichev/SOLID/blob/master/LSP/1.png)
+
+Implementing **Square** as a *subclass* of **Rectangle**:
+
+```objective-c
+class Square extends Rectangle {
+
+	public void setWidth(int width) {
+		super.setWidth(width);
+		super.setHeight(width);
+	}
+
+	public void setHeight(int height) {
+		super.setWidth(height);
+		super.setHeight(height);
+	}
+}
+```
+
+* Now we can pass **Square** wherever **Rectangle** is expected.
+
+A client that works with instances of **Rectangle**, but **breaks** when instances of **Square** are passed to it.
+
+```objective-c
+void clientMethod(Rectangle rec)
+{
+	rec.setWidth(5);
+	rec.setHeight(4);
+	assert(rec.area() == 20);
+}
+```
+
+### LSP Compliant Solution
+
+![LSP Compliant Solution](https://github.com/alspirichev/SOLID/blob/master/LSP/2.png)
+
+### Behavioral Substitutability
+
+So what does the **LSP** add to the common object-oriented subtyping rules?
+
+The **LSP** additionally requires *behavioral substitutability*.
+
+![Behavioral Substitutability](https://github.com/alspirichev/SOLID/blob/master/LSP/3.png)
+
+* It’s not enough that instances of **SomeSubclass1** and **SomeSubclass2** provide all methods declared in **SomeClass**. These methods should also behave like their heirs!
+
+* A client method should not be able to distinguish the behavior of objects of **SomeSubclass1** and **SomeSubclass2** from that of objects of **SomeClass**.
+
+### Behavioral Subtyping
+
+**S** is a behavioral subtype of **T**, if objects of type **T** in a program **P** may be replaced by objects of type **S** without altering any of the properties of **P**.
+
+Consider a function **f** parameterized over type **T**:
+
+* **S** is a derivate of **T**
+
+* When passed to **f** in the guise of objects of type **T**, objects of type **S** cause f to **misbehave**.
+
+* **S** violates the **LSP**. 
+
+=> **f** is fragile in the presence of **S**.
+
+# :books: Source
 
 * [Software Engineering Design & Construction](http://stg-tud.github.io/sedc/Lecture/ws16-17/)
 * Agile Software Development; Robert C. Martin; Prentice Hall, 2003
