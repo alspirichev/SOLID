@@ -5,6 +5,7 @@
 - [The Single Responsibility Principle (SRP)](#the-single-responsibility-principle-srp)
 - [The Open/Closed Principle (OCP)](#the-open-closed-principle-ocp)
 - [The Liskov Substitution Principle (LSP)](#the-liskov-substitution-principle-lsp)
+- [The Interface Segregation Principle (ISP)](#the-interface-segregation-principle-isp)
 - [Source](#source)
 
 
@@ -213,6 +214,44 @@ Consider a function **f** parameterized over type **T**:
 * **S** violates the **LSP**. 
 
 => **f** is fragile in the presence of **S**.
+
+# The Interface Segregation Principle (ISP)
+
+> <h3> Clients should not be forced to depend on methods they do not use.
+
+Classes whose interfaces are not cohesive have "**fat**" interfaces. In other words, the interfaces of the class can be broken up into **groups** of methods. Each group serves a **different** set of clients. Thus, some clients use one group of methods, and other clients use the other groups.
+
+### Example
+
+Consider the development of software for an automated teller machine (**ATM**):
+
+* Support for the following types of transactions is required: **withdraw**, **deposit**, and **transfer**.
+
+* Support for different **languages** and support for different **kinds of UIs** is also required.
+
+* Each transaction class needs to call methods on the GUI.
+
+E.g., to ask for the amount to **deposit**, **withdraw**, **transfer**.
+
+Initial design of a software for an ATM:
+
+![Not ISP](https://github.com/alspirichev/SOLID/blob/master/ISP/1.png)
+
+**ATM UI is a polluted interface!**
+
+* It declares methods that do not belong together.
+
+* It forces classes to depend on unused methods and therefore depend on changes that should not affect them.
+
+* **ISP** states that such interfaces should be **split**.
+
+:bangbang: When clients depend on methods they do not use, they **become subject to changes forced upon these methods** by other clients. :bangbang:
+
+An ISP Compliant Solution:
+
+![ISP](https://github.com/alspirichev/SOLID/blob/master/ISP/2.png)
+
+**General Strategy**: Try to **group** possible clients of a class and have an **interface**/**trait** for each group.
 
 # :books: Source
 
