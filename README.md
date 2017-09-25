@@ -6,6 +6,7 @@
 - [The Open/Closed Principle (OCP)](#the-open-closed-principle-ocp)
 - [The Liskov Substitution Principle (LSP)](#the-liskov-substitution-principle-lsp)
 - [The Interface Segregation Principle (ISP)](#the-interface-segregation-principle-isp)
+- [The Dependency Inversion Principle (DIP)](#the-dependency-inversion-principle-dip)
 - [Source](#source)
 
 
@@ -252,6 +253,68 @@ An ISP Compliant Solution:
 ![ISP](https://github.com/alspirichev/SOLID/blob/master/ISP/2.png)
 
 **General Strategy**: Try to **group** possible clients of a class and have an **interface**/**trait** for each group.
+
+# The Dependency Inversion Principle (DIP)
+
+> <h3> A. High-level modules should not depend on low-level modules. Both should depend on abstractions.
+> 
+> <h3> B. Abstractions should not depend upon details. Details should depend upon abstractions.
+
+### Example:
+
+Consider the case of the **Button** object and the **Lamp** object.
+
+![image](https://github.com/alspirichev/SOLID/blob/master/DIP/1.png)
+
+- Behavior of Button: 
+
+	* The button is capable of “**sensing**” whether it has been **activated**/**deactivated** by the user
+	
+	* Once a change is detected, it turns the **Lamp** **on**, respectively **off**.
+
+Note that the **Button** class depends directly on the **Lamp** class. This dependency implies that **Button** will be affected by changes to **Lamp**. Moreover, it will not be possible to *reuse* **Button** to control a **Motor** object. In this model, **Button** objects control **Lamp** objects and only **Lamp** objects.
+
+Dependency inversion applied to **Lamp**:
+
+![image](https://github.com/alspirichev/SOLID/blob/master/DIP/2.png)
+
+**Lamp** certainly depends on **ButtonServer**, but **ButtonServer** does not depend on **Button**. Any kind of object that knows how to manipulate the **ButtonServer** interface will be able to control a **Lamp**. Thus, the dependency is in name only. And we can fix that by changing the name of **ButtonServer** to something a bit more generic, such as **SwitchableDevice**.
+
+![image](https://github.com/alspirichev/SOLID/blob/master/DIP/3.png)
+
+### The Rationale behind the DIP
+
+- Good software designs are structured into **modules**.
+
+	* **High-level modules** contain the important policy decisions and business models of an application – The identity of the application.
+	
+	* **Low-level modules** contain detailed implementations of individual mechanisms needed to realize the policy.
+
+### Layering
+
+> ...all well structured object-oriented architectures have **clearly-defined** layers, with each layer providing some **coherent** set of services through a well-defined and controlled interface.
+> 
+> Grady Booch
+
+![image](https://github.com/alspirichev/SOLID/blob/master/DIP/4.png)
+
+In this diagram, the *high-level* **Policy layer** uses a *lower-level* **Mechanism layer**, which in turn uses a *detailed-level* **Utility layer**. Although this may look appropriate, it has the insidious characteristic that the **Policy layer** is sensitive to changes all the way down in the **Utility layer**. ***Dependency is transitive***. The **Policy layer** depends on something that depends on the **Utility layer**; thus, the **Policy layer** transitively depends on the **Utility layer**.
+
+**This is very unfortunate.**
+
+Below a more appropriate model.
+
+![image](https://github.com/alspirichev/SOLID/blob/master/DIP/5.png)
+
+All relationships in a program should terminate on an **abstract** class or an **interface**.
+
+* No class should hold a reference to a **concrete** class.
+
+* No class should **derive** from a **concrete** class.
+
+* No method should **override** an implemented method of any of its **base** classes.
+
+**DO NOT DEPEND ON A CONCRETE CLASS.**
 
 # :books: Source
 
